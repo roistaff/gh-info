@@ -120,6 +120,8 @@ Usage:
 Author:
         `+color.HiYellowString("Staff Roi")+` [roistaff1983@gmail.com]
         Please type "gh info user roistaff"
+Futures:
+        - add search command (search repos)
 More about this:
         Please visit `+color.HiGreenString("https://github.com/roistaff/gh-info")
         fmt.Println(helptext)
