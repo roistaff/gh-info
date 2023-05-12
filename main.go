@@ -6,10 +6,11 @@ import (
         "log"
         "os"
         "strconv"
-        "github.com/fatih/color"
-        "net/http"
+        "time"
+	"context"
 	"io/ioutil"
-        "strings"
+        "net/http"
+        "github.com/fatih/color"
 )
 type UserResponse struct {
         Company    string `json:"company"`
@@ -45,18 +46,33 @@ type RepoResponse struct {
 	Star       int    `json:"stargazers_count"`
 }
 
-const url string = "https://api.github.com/"
-
-func getAPI(url2 string) []byte {
-	resp, _ := http.Get(url + url2)
-	defer resp.Body.Close()
-	body, _ := ioutil.ReadAll(resp.Body)
+func getAPI(url2 string)[]byte{
+	const url string = "https://api.github.com/"
+	client := http.Client{
+			Timeout: 20 * time.Second,
+	}
+	req,err := http.NewRequestWithContext(
+			context.Background(),
+			http.MethodGet,
+			url+url2,
+			nil,
+	)
+	if err != nil{
+                panic(err)
+        }
+	res,err := client.Do(req)
+	if err != nil{
+                color.Red("Error: Off-line.Please connect.")
+                os.Exit(1)
+	}
+	defer res.Body.Close()
+	body, _ := ioutil.ReadAll(res.Body)
 	return body
 }
 
 func getInfoRepo(fullname string){
 	var data RepoResponse
-	body := getAPI("repos/" +fullname)
+	body:= getAPI("repos/" +fullname)
 	if err := json.Unmarshal(body,&data); err != nil {
 		log.Fatal(err)
 	}
@@ -83,38 +99,59 @@ func getInfoUser(username string){
 	}
 }
 func welcome(){
-        welcometext := `         ____  _  _    _             _       ___          __        
-        / ___|(_)| |_ | |__   _   _ | |__   |_ _| _ __   / _|  ___  
-       | |  _ | || __|| '_ \ | | | || '_ \   | | | '_ \ | |_  / _ \ 
-       | |_| || || |_ | | | || |_| || |_) |  | | | | | ||  _|| (_) |
-        \____||_| \__||_| |_| \__,_||_.__/  |___||_| |_||_|   \___/ 
-                                                                    `
+        welcometext := ` ____  _  _    _             _       ___          __        
+ / ___|(_)| |_ | |__   _   _ | |__   |_ _| _ __   / _|  ___  
+| |  _ | || __|| '_ \ | | | || '_ \   | | | '_ \ | |_  / _ \ 
+| |_| || || |_ | | | || |_| || |_) |  | | | | | ||  _|| (_) |
+ \____||_| \__||_| |_| \__,_||_.__/  |___||_| |_||_|   \___/ 
+        version:0.0.1`
         fmt.Println(welcometext)
 }
 func Helps(message ...string){
+        welcome()
         if message != nil{
                 fmt.Println(color.RedString("! Message: "),message)
         }
-        fmt.Println("Hello")
+        helptext := `
+Usage:
+        gh info user [username]`+color.HiBlackString(" To find user info")+`
+        gh info repo [user/repo]`+color.HiBlackString(" To find repo info. For exsample: gh info roistaff/gh-info")+`
+        gh info help `+color.HiBlackString(" To show helps")+`
+Author:
+        `+color.HiYellowString("Staff Roi")+` [roistaff1983@gmail.com]
+        Please type "gh info user roistaff"
+More about this:
+        Please visit `+color.HiGreenString("https://github.com/roistaff/gh-info")
+        fmt.Println(helptext)
+        os.Exit(1)
 }
-func main() {
-        color.HiGreen("Github Info")
+func main(){
+        color.HiGreen("Github Info\n")
         args := os.Args
-	if len(args) != 1{if len(args) == 3{
-        if args[2] == "--user"{
-                getInfoUser(args[1])
-                }else if args[2] == "--repo"{
-			getInfoRepo(args[1])
-			}
-                }else if len(args) == 2{
-                        if strings.Contains(args[1], "/"){
-                                getInfoRepo(args[1])
+	if len(args) != 1{
+                if len(args) == 2{
+                        if args[1] == "help"{
+                                Helps()
+                        }else if args[1] == "repo"{
+                                color.Red("× Error: Not enough arguments.")
+                                os.Exit(1)
+                        }else if args[1] == "user"{
+                                color.Red("× Error: Not enough arguments.")
+                                os.Exit(1)
                         }else{
-                                getInfoUser(args[1])
+                                Helps("Unknown command '"+args[1]+"'")
                         }
                 }
+                if len(args) == 3{
+                if args[1] == "user"{
+                        getInfoUser(args[2])          
+                }else if args[1] == "repo"{
+                        getInfoRepo(args[2])
+                }else if args[1] == "help"{
+                        Helps()
+                }
+                }
         }else{
-                welcome()
-
+                Helps()
         }
 }
