@@ -143,7 +143,9 @@ func main(){
                         }
                 }
                 if len(args) == 3{
-                if args[1] == "user"{
+                if args[1] != "user" && args[1] != "repo" && args[1] != "help"{
+                        Helps("Unknown command '"+args[1]+"'")
+                }else if args[1] == "user"{
                         getInfoUser(args[2])          
                 }else if args[1] == "repo"{
                         getInfoRepo(args[2])
