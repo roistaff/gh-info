@@ -33,7 +33,7 @@ For exsample:
 gh info user google
 ```
 Output:
-
+![exsample1](imgs/gh-info-user-demo.gif)
 Gif
 
 ### Get repository information
@@ -45,9 +45,34 @@ For exsample:
 ```bash
 gh info repo koki-develop/gh-grass
 ```
+Output:
+![exsample2](imgs/gh-info-repo-demo.gif)
 ### Help
 ```bash
 gh info help
+```
+Output:
+
+```
+Github Info
+ ____  _  _    _             _       ___          __        
+ / ___|(_)| |_ | |__   _   _ | |__   |_ _| _ __   / _|  ___  
+| |  _ | || __|| '_ \ | | | || '_ \   | | | '_ \ | |_  / _ \ 
+| |_| || || |_ | | | || |_| || |_) |  | | | | | ||  _|| (_) |
+ \____||_| \__||_| |_| \__,_||_.__/  |___||_| |_||_|   \___/ 
+        version:0.0.1
+
+Usage:
+        gh info user [username] To find user info
+        gh info repo [user/repo] To find repo info. For exsample: gh info roistaff/gh-info
+        gh info help  To show helps
+Author:
+        Staff Roi [roistaff1983@gmail.com]
+        Please type "gh info user roistaff"
+Futures:
+        - add search command (search repos)
+More about this:
+        Please visit https://github.com/roistaff/gh-info
 ```
 ## License
 
