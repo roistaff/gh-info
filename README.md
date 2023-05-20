@@ -74,6 +74,11 @@ Futures:
 More about this:
         Please visit https://github.com/roistaff/gh-info
 ```
+
+## Futures
+- add search command
+- show more information about repository
+
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
