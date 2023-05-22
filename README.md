@@ -9,8 +9,10 @@
 # gh-info
 The simple and colorfully github cli extension to show every information of github.
 ## Demo
+![exsample1](imgs/gh-info-user-demo.gif)
 
-Insert gif or link to demo
+![exsample2](imgs/gh-info-repo-demo.gif)
+
 
 
 ## Installation
